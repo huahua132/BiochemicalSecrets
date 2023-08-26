@@ -53,7 +53,7 @@ end
 function GameInstance:OnNetConnected()
     print("OnNetConnected")
     -- 请求连接代理服务器
-    self.Proxy:OnReqConnectProxy(self.Login.cache.guid, self.Login.cache.key)
+    self.Proxy:OnReqConnectProxy(self.Login.cache.guid, self.Login.cache.proxy_key)
 end
 
 

@@ -16,12 +16,12 @@ Room = Object({})
 
 function Room:Create(net)
     self.net = net
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_CREATE, self.OnAckRoomCreate, self)
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_LIST, self.OnAckRoomList, self)
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_JOIN, self.OnAckRoomJoin, self)
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_QUIT, self.OnAckRoomQuit, self)
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_GAME_PLAY_START, self.OnAckGameplayStart, self)
-    self.net:RegisteredDelegation(GameBaseRPC.ACK_GAME_JOIN, self.OnAckGameplayJoin, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_CREATE, self.OnAckRoomCreate, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_LIST, self.OnAckRoomList, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_JOIN, self.OnAckRoomJoin, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_QUIT, self.OnAckRoomQuit, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ROOM_GAME_PLAY_START, self.OnAckGameplayStart, self)
+    --self.net:RegisteredDelegation(GameBaseRPC.ACK_GAME_JOIN, self.OnAckGameplayJoin, self)
     
     self.eventHandlers = {}
     self.isOwner = false

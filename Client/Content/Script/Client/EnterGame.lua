@@ -9,7 +9,7 @@ EnterGame = Object({})
 
 function EnterGame:Create(net)
     self.net = net
-    self.net:RegisteredDelegation(GameLobbyRPC.ACK_ENTER, self.OnAckEnter, self)
+    --self.net:RegisteredDelegation(GameLobbyRPC.ACK_ENTER, self.OnAckEnter, self)
 end
 
 -- 请求进入游戏
@@ -19,7 +19,7 @@ function EnterGame:OnReqEnter()
     local req = {
         object = Guid.New(0, 0):ToIdent()
     }
-    self.net:SendPB(GameLobbyRPC.REQ_ENTER, "rpc.ReqEnter", req )
+    --self.net:SendPB(GameLobbyRPC.REQ_ENTER, "rpc.ReqEnter", req )
 end
 
 function EnterGame:OnAckEnter(data)
