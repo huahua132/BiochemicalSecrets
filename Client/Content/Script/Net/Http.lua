@@ -6,13 +6,7 @@ local rapidjson = require "rapidjson"
 Http = Object({})
 
 function Http:Create()
-    self.user = "none"
-    self.jwt = "none"
-end
-
-function Http:SetJwt(user, token)
-    self.user = user
-    self.jwt = token
+    self.cookie = "none"
 end
 
 function Http:Get(url)
@@ -24,8 +18,7 @@ function Http:Get(url)
             ["Accept"] = "*/*",
             ["Accept-Encoding"] = "gzip, deflate",
             ["Accept-Language"] = "en-us",
-            ["Jwt"] = self.jwt,
-            ["User"] =  self.user,
+            ["Cookie"] = self.cookie,
         },
         sink = ltn12.sink.table(respbody)
     }
@@ -43,11 +36,15 @@ function Http:Post(url, data)
             ["Accept-Encoding"] = "gzip, deflate",
             ["Accept-Language"] = "en-us",
             ["Content-Length"] = string.len(data),
-            ["Jwt"] = self.jwt,
-            ["User"] =  self.user,
+            ["Cookie"] = self.cookie,
         },
         sink = ltn12.sink.table(respbody)
     }
+    -- Try Set-Cookie
+    local cookie = headers['set-cookie']
+    if(cookie) then
+        self.cookie = cookie;
+    end
     return respbody[1]
 end
 
@@ -58,8 +55,8 @@ function Http:PostJson(url, json_data)
     return rapidjson.decode(body)
 end
 
-
 function Http:GetJson(url)
     local body = self:Get(url)
+    print("body: " , body)
     return rapidjson.decode(body)
 end

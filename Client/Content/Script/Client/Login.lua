@@ -13,7 +13,6 @@ function Login:Create()
     self.cache = {
         account = "none",
         password = "",
-        token = "",
 
         guid = "",
         limit_time = 0,
@@ -53,10 +52,7 @@ function Login:LoginWithAccountPassword(account, password)
 
     local r = self.http:PostJson(self.url .. "/login", d)
     if(r.code == 0) then
-        self.cache.token = r.token
         self.cache.guid = r.guid
-        -- 设置jwt
-        self.http:SetJwt(r.guid, r.token)
         print("登录成功\n")
 
         self:GetWorldList()
@@ -71,7 +67,6 @@ function Login:GetWorldList()
     local r = self.http:GetJson(self.url .. "/world/list")
     print_table(r)
     if(r.code == 0) then
-
         -- 选择第一个大区
         self:EnterWorld(r.world[1].id)
     end
@@ -86,8 +81,6 @@ function Login:EnterWorld(world_id)
         self.cache.proxy_ip = r.ip
         self.cache.proxy_limit_time = r.limit_time
         self.cache.world_id = 100
-        --self.guid = r.guid
-
         GameInstance:OnLogined(r.ip, r.port, r.guid, r.key)
     else
         print("进入大区失败\n")

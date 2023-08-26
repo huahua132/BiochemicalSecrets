@@ -59,6 +59,7 @@ end
 
 -- 连接代理服务器授权成功
 function GameInstance:OnProxyConnected()
+    print("网络连接代理服务器成功")
     self.EnterGame:OnReqEnter()
 end
 

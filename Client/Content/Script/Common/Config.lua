@@ -31,7 +31,7 @@ elseif deploy_mode == DeployMode.Localhost then
     -- Local Host
     Servers = {
         login = {
-            [1] = { url = "http://127.0.0.1" },
+            [1] = { url = "http://127.0.0.1:10088" },
         },
         pvp_manager = {
             [1] = { ip = "127.0.0.1", port = 20001 },
