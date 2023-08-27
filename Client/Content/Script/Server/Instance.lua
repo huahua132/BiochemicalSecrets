@@ -15,7 +15,7 @@
 -- 在启动后，该PVP服务器自主连接 PVP Manager，让PVP Manager作为代理，与Game Server进行通信
 -- 在Lua层面创建客户端 Instance 
 -- Windows启动参数如下
--- start ../../client/Build/Server/GunVR.exe -instance_id=123456 -key=abcd -game_id=16001 -mip=192.168.0.196 -mport=20001 -ip=192.168.0.196
+-- start ../../client/Build/Server/Action.exe -instance_id=123456 -key=abcd -game_id=16001 -mip=192.168.0.196 -mport=20001 -ip=192.168.0.196
 require "Net.Client"
 require "Net.Tcp"
 require "Server.GameInit"
@@ -66,7 +66,7 @@ function GameInstance:Init(args)
     print("self.is_local: ", self.is_local)
     if(self.is_local) then
         -- 加载地图并监听
-        GameInstance:LoadLevelAndListen(Maps[2], 10)
+        GameInstance:LoadLevelAndListen(Maps[1], 10)
         return;
     end
 
