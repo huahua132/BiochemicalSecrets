@@ -14,15 +14,11 @@ require "Client.EnterGame"
 
 -- 在Lua层面创建客户端 Instance 
 function GameInstance:Init()
-    self.net = NetClient.New()
+    self.net = NetClient.New('tcp')
     self.Login = Login.New()
     self.Proxy = Proxy.New(self.net)
     self.EnterGame = EnterGame.New(self.net)
     self.Room = Room.New(self.net)
-
-    self.tcp = Tcp.New()
-    self.net:BindClient(self.tcp)
-    
     self.isLogin = false
     self.net:RegisteredNetEventHandler(NetEventType.Connected, self.OnNetConnected, self)
     self.net:RegisteredNetEventHandler(NetEventType.Disconnected, self.OnNetDisConnected, self)
@@ -89,8 +85,8 @@ function GameInstance:OnNetDisconnected()
 end
 
 function GameInstance:Tick(deltaSeconds)
-    if  self.tcp ~= nil then
-        self.tcp:Tick()
+    if(self.net) then
+        self.net:Tick()
     end
 end
 

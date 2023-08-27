@@ -53,7 +53,7 @@ NetEventType = {
 NetClient = Object({})
 
 
-function NetClient:Create()
+function NetClient:Create(type)
     self.delegations = {}
     self.netEventHandlers = {}
     self.guid = Guid.New()
@@ -66,8 +66,13 @@ function NetClient:Create()
     self.isReceivedHeader = false
     self.cacheData = ''
     self.cacheSize = 0
+    self.lastHeartbeatTime = 0
 
     self:RegisteredDelegation(ProxyRPC.ACK_HEARTBEAT, self.OnAckHeartBeat, self)
+
+    if(type == 'tcp') then
+        self.client = Tcp.New(self)
+    end
 end
 
 -- 包裹最基本的包体
@@ -98,7 +103,6 @@ end
 
 -- TCP层面发送数据
 function NetClient:SendRaw(data)
-    
     self.client:SendData(data)
 end
 
@@ -106,12 +110,6 @@ end
 function NetClient:SendPB(msgId, pkg, tb)
     local data =  assert(pb.encode(pkg, tb))
      self:SendData(msgId,data)
-end
-
--- 双向绑定
-function NetClient:BindClient(client)
-    self.client = client
-    self.client:BindNetClient(self)
 end
 
 function NetClient:OnConnected()
@@ -301,22 +299,27 @@ end
 
 
 -- 每3秒由 Client 进行调用
-function NetClient:OnHeartBeat()
+function NetClient:OnReqHeartBeat()
     self.heartBeatIndex = self.heartBeatIndex + 1
-    --Screen.Print("心跳包: " )
-    --self:SendData(ProxyRPC.REQ_HEARTBEAT, assert(pb.encode("rpc.ReqLogin", { index = self.heartBeatIndex})))
+    self:SendData(ProxyRPC.REQ_HEARTBEAT, assert(pb.encode("rpc.AckHeartBeat", { index = self.heartBeatIndex})))
 end
 
 -- 服务端返回
 function NetClient:OnAckHeartBeat(data)
-    --Screen.Print("心跳包返回: " )
 end
 
--- 由 Client 进行Tick调用
+-- 由 Instance 进行Tick驱动
 function NetClient:Tick()
-    
-end
+    if(self.client) then
+        self.client:Tick()
+    end
 
+    local time = os.time()
+    if time > self.lastHeartbeatTime and self.isConnected then
+        self.lastHeartbeatTime = time + 5 --每3秒发送一次心跳
+        self:OnReqHeartBeat()
+    end
+end
 
 -- 收到消息
 function NetClient:OnMessageEvent(msgId, data)

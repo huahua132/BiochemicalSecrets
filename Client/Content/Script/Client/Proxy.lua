@@ -13,6 +13,7 @@ function Proxy:Create(net)
 end
 
 function Proxy:OnReqConnectProxy(guid, key)
+    print("请求授权代理服务器", key)
     local req = {
         guid = Guid.New(guid):ToIdent(),
         key = key,
