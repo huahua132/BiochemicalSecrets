@@ -1,26 +1,10 @@
-# Client project
+# 生化密码客户端代码
 
 ## 介绍
 
-多人在线PVP、PVE射击类游戏，包含客户端代码以及对战服务器代码。
+采用UE4引擎打造，包含客户端代码以及专用服务器代码，使用了腾讯Unlua框架，逻辑全采用蓝图和Lua来进行编写。
 
-
-
-### 支持多平台
-
-#### 已打包测试平台
-
-##### 客户端
-
-VR: Pico、Oculus
-
-Mobile: Android
-
-PC: Windows、Linux
-
-##### 服务端
-
-WindowsGUI(开发用)、LinuxGUI(开发用)、Linux(Linux专用服务器，部署用)
+协议走http+json和tcp+protobuf
 
 
 
@@ -31,6 +15,24 @@ Docs: 文档
 Excel: 策划数据配置表
 
 Tools: 工具
+
+
+
+### 支持多平台
+
+#### 已打包测试平台
+
+##### 客户端
+
+Mobile: Android、IOS
+
+PC: Windows、Linux
+
+##### 服务端
+
+WindowsGUI(开发用)、LinuxGUI(开发用)、Linux(Linux专用服务器，部署用)
+
+
 
 
 
@@ -66,9 +68,9 @@ BuildTarget选择ActionServer
 
 ## 启动场景
 
-客户端入口场景： Maps/ClientEntrance
+客户端入口场景： Maps/Splash
 
-服务端入口场景：Maps/ServerEntrance
+服务端入口场景：Maps/Server
 
 
 

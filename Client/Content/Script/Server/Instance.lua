@@ -20,12 +20,6 @@ require "Net.Client"
 require "Net.Tcp"
 require "Server.GameInit"
 require "Server.Login"
-
-function GameInstance:Create()
-    print("Server Instance")
-    --self.NetClient = NetClient.New()
-end
-
 ServerArgs = nil
 
 -- 在Lua层面创建服务端 Instance
@@ -33,6 +27,7 @@ function GameInstance:Init(args)
     print("App ARGS: ")
     print_table(args)
     local args_table = args:ToTable()
+    self.is_local = true
 
     ServerArgs = {
         instance_id = 0,
@@ -41,7 +36,7 @@ function GameInstance:Init(args)
         mip = "127.0.0.1",
         mport = 12000,
         ip = "127.0.0.1",
-        name = "test_gameplay_ds"
+        name = "test_gameplay_ds",
     }
 
     if args_table.instance_id ~= nil then
@@ -67,14 +62,19 @@ function GameInstance:Init(args)
     print_table(ServerArgs)
 
 
-    self.net = NetClient.New()
+    -- 脱网测试
+    print("self.is_local: ", self.is_local)
+    if(self.is_local) then
+        -- 加载地图并监听
+        GameInstance:LoadLevelAndListen(Maps[2], 10)
+        return;
+    end
+
+    self.net = NetClient.New('tcp')
     self.Login = ServerLogin.New(self.net)
     self.GameInit = GameInit.New(self.net)
     self.net:RegisteredNetEventHandler(NetEventType.Connected, self.OnNetConnected, self)
     self.net:RegisteredNetEventHandler(NetEventType.Disconnected, self.OnNetDisConnected, self)
-    
-    self.tcp = Tcp.New()
-    self.net:BindClient(self.tcp)
 
     self:EventBind()
     -- PVP Manager连接服务器

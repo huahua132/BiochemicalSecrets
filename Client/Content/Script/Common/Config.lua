@@ -43,6 +43,7 @@ end
 
 -- 场景地图
 Maps = {
-    --[0] = "/Game/Maps/Test",
-    [0] = "/Game/Maps/Game/Level_2",
+    [1] = "/Game/Maps/Game/LevelTest1",
+    [2] = "/Game/Maps/Game/LevelTest2",
+    [3] = "/Game/Maps/Game/LevelTest3",
 }
