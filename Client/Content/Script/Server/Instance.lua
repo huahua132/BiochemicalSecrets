@@ -25,7 +25,7 @@ ServerArgs = nil
 -- 在Lua层面创建服务端 Instance
 function GameInstance:Init(args)
     print("App ARGS: ")
-    print_table(args)
+    PrintTable(args)
     local args_table = args:ToTable()
     self.is_local = true
 
@@ -59,7 +59,7 @@ function GameInstance:Init(args)
     end
 
     print("Server ARGS: ")
-    print_table(ServerArgs)
+    PrintTable(ServerArgs)
 
 
     -- 脱网测试

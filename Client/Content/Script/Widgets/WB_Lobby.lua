@@ -32,7 +32,7 @@ end
 
 function M:AckFrashRoomList(data)
 	print("Room List.....")
-	print_table(data)
+	PrintTable(data)
 	
 	for key, value in pairs(data.list) do
 		local info = "房间号: " .. value.id .. " 名称: " .. value.name  .. " 玩家:" .. value.nplayers .. " / " .. value.max_players .. "staus: " .. value.status
@@ -67,7 +67,7 @@ function M:OnClicked_Button_PvpMode()
 end
 
 function M:CreateRoom(data)
-    print_table(data)
+    PrintTable(data)
     if data.code == 0 then
         self.Switcher:SetActiveWidgetIndex(1) -- 显示房间信息
         print("创建房间成功: 房间ID: " .. tostring(data.room_id))

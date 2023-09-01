@@ -23,7 +23,7 @@ end
 
 function Proxy:OnAckConnectProxy(data)
     local ack = assert(pb.decode("rpc.AckConnectProxy", data))
-    print_table(ack)
+    PrintTable(ack)
     if(ack.code == 0) then
         print("连接代理服务器成功")
         GameInstance:OnProxyConnected()

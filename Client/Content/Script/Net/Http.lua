@@ -41,6 +41,11 @@ function Http:Post(url, data)
         sink = ltn12.sink.table(respbody)
     }
     -- Try Set-Cookie
+    if(headers == nil) then
+        print("network error");
+        return nil;
+    end
+
     local cookie = headers['set-cookie']
     if(cookie) then
         self.cookie = cookie;
@@ -52,11 +57,17 @@ end
 function Http:PostJson(url, json_data)
     local data = rapidjson.encode(json_data)
     local body = self:Post(url, data)
-    return rapidjson.decode(body)
+    if(body) then
+        return rapidjson.decode(body)
+    end
+    
+    return nil
 end
 
 function Http:GetJson(url)
     local body = self:Get(url)
-    print("body: " , body)
-    return rapidjson.decode(body)
+    if(body) then
+        return rapidjson.decode(body)
+    end
+    return nil
 end

@@ -65,7 +65,7 @@ end
 -- 获取区服列表
 function Login:GetWorldList()
     local r = self.http:GetJson(self.url .. "/world/list")
-    print_table(r)
+    PrintTable(r)
     if(r.code == 0) then
         -- 选择第一个大区
         self:EnterWorld(r.world[1].id)
@@ -75,7 +75,7 @@ end
 
 function Login:EnterWorld(world_id)
     local r = self.http:PostJson(self.url .. "/world/enter", { world_id = world_id })
-    print_table(r)
+    PrintTable(r)
     if(r.code == 0) then
         self.cache.proxy_key = r.key
         self.cache.proxy_ip = r.ip

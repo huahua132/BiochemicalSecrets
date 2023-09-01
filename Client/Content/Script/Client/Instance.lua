@@ -10,14 +10,14 @@ require "Net.Tcp"
 require "Client.Login"
 require "Client.Room"
 require "Client.Proxy"
-require "Client.EnterGame"
+require "Client.Player"
 
 -- 在Lua层面创建客户端 Instance 
 function GameInstance:Init()
     self.net = NetClient.New('tcp')
     self.Login = Login.New()
     self.Proxy = Proxy.New(self.net)
-    self.EnterGame = EnterGame.New(self.net)
+    self.Player = Player.New(self.net)
     self.Room = Room.New(self.net)
     self.isLogin = false
     self.net:RegisteredNetEventHandler(NetEventType.Connected, self.OnNetConnected, self)
@@ -56,12 +56,12 @@ end
 -- 连接代理服务器授权成功
 function GameInstance:OnProxyConnected()
     print("网络连接代理服务器成功")
-    self.EnterGame:OnReqEnter()
+    self.Player:OnEnter()
 end
 
 
 -- 客户端进入游戏
-function GameInstance:OnEnterGame()
+function GameInstance:OnEnterLobby()
     Screen.Print("成功进入游戏")
     
     -- 进入游戏

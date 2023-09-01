@@ -26,7 +26,7 @@ end
 function GameInit:OnAckGameplayData(data)
     print("数据初始化中...")
     local ack = assert(pb.decode("rpc.RoomDetails", data))
-    print_table(ack)
+    PrintTable(ack)
     --print("event_code", ack.event_code, type(ack.event_code))
     -- 进入场景
     print("正在加载场景: ", Maps[ack.game_play.scene])

@@ -49,7 +49,7 @@ end
 function Room:OnAckRoomCreate(data)
     print(" ClientRoom:OnAckRoomCreate 返回 " .. data)
     local ack = assert(pb.decode("rpc.AckRoomCreate", data))
-    print_table(ack)
+    PrintTable(ack)
     self:CallEvent(RoomEvent.ACK_ROOM_CREATE, ack)
 end
 
@@ -99,7 +99,7 @@ end
 function Room:OnAckGameplayJoin(data)
     print("正式开始游戏，即将进入PVP服务器")
     local ack = assert(pb.decode("rpc.AckGameplayJoin", data))
-    print_table(ack)
+    PrintTable(ack)
     if ack.server.port == 0 then
         print("服务端未初始化，进入失败")
         return
@@ -124,7 +124,7 @@ end
 function Room:OnAckRoomJoin(data)
     print("响应加入房间")
     local ack = assert(pb.decode("rpc.AckRoomJoin", data))
-    print_table(ack)
+    PrintTable(ack)
     self:CallEvent(RoomEvent.ACK_ROOM_JOIN, ack)
 end
 
@@ -155,7 +155,7 @@ end
 function Room:OnAckRoomQuit(data)
     print("退出房间")
     local ack = assert(pb.decode("rpc.AckRoomJoin", data))
-    print_table(ack)
+    PrintTable(ack)
     self:CallEvent(RoomEvent.REQ_ROOM_QUIT, ack)
 end
 

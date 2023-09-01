@@ -342,7 +342,7 @@ function NetClient:RegisteredDelegation(msgId, callback, this)
     if msgId == nil then
         print("MsgID == nil", this)
         dump(this, " NetClient:RegisteredDelegation")
-        --print_table(this)
+        --PrintTable(this)
     end
     
     self.delegations[msgId] = { callback = callback, this = this }
