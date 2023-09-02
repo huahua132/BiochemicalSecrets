@@ -25,6 +25,8 @@ function GameInstance:Init()
     self:EventBind()
 
     self.Widgets = { }
+
+    GameInstance:PlayBGM() -- 播放BGM
 end
 
 function GameInstance:EventBind()
@@ -35,7 +37,7 @@ function GameInstance:CheckIsLogin()
     
 end
 
-function GameInstance:OnLogined(ip, port, guid, key)
+function GameInstance:OnLogined(ip, port, account_id, key)
     --  连接代理服务器
     self.net:Connect(ip, port)
 end
@@ -49,7 +51,7 @@ end
 function GameInstance:OnNetConnected()
     print("OnNetConnected")
     -- 请求连接代理服务器
-    self.Proxy:OnReqConnectProxy(self.Login.cache.guid, self.Login.cache.proxy_key)
+    self.Proxy:OnReqConnectProxy(self.Login.cache.account_id, self.Login.cache.proxy_key)
 end
 
 
@@ -93,4 +95,7 @@ function GameInstance:EndPlay()
     
 end
 
+function GameInstance:OnChangeScene()
+
+end
 -----

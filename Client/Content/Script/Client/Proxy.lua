@@ -12,10 +12,10 @@ function Proxy:Create(net)
     self.net:RegisteredDelegation(ProxyRPC.ACK_CONNECT_PROXY, self.OnAckConnectProxy, self)
 end
 
-function Proxy:OnReqConnectProxy(guid, key)
+function Proxy:OnReqConnectProxy(account_id, key)
     print("请求授权代理服务器", key)
     local req = {
-        guid = guid,
+        account_id = account_id,
         key = key,
     }
     self.net:SendPB(ProxyRPC.REQ_CONNECT_PROXY, "rpc.ReqConnectProxy", req )

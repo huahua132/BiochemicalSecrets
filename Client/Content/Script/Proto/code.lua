@@ -581,6 +581,16 @@ enum PlayerRPC {
     ACK_PLAYER_OFFLINE = 12001;
     REQ_PLAYER_DATA = 12002; // 获取玩家详细全部数据
     ACK_PLAYER_DATA = 12003; //
+}
+
+message ReqPlayerData {
+}
+
+message AckPlayerData {
+    bytes account = 1;
+    bytes player_id = 2;
+    bytes name = 3;
+    int32 level = 4;
 }// 描述: 玩家事件
 // 使用: 服务器
 
@@ -595,16 +605,15 @@ enum PlayerEventRPC {
 }
 
 message PlayerEnterEvent {
-    bytes object = 1;  // 游戏对象guid
-    bytes guid = 2;    // 账号guid
-    bytes account = 3; // 登录账号
-    int32 proxy_id = 4;// proxy_id
+    bytes account_id = 1;   // 账号guid
+    bytes account = 2;      // 登录账号
+    int32 proxy_id = 3;     // proxy_id
 }
 
 message PlayerBindEvent {
     int32 code = 1;
-    bytes guid = 2;
-    bytes object = 3; // 相当于是一个Player
+    bytes account_id = 2;
+    bytes player_id = 3;
 }
 
 message PlayerLeaveEvent {
@@ -639,7 +648,7 @@ enum ProxyRPC {
 ////////////////////////////////////////////////////
 
 message ReqConnectProxy {
-    bytes guid = 1; // account的guid
+    bytes account_id = 1;
     bytes key = 2;
 }
 

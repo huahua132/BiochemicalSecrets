@@ -12,9 +12,8 @@ function Login:Create()
 
     self.cache = {
         account = "none",
+        account_id = "",
         password = "",
-
-        guid = "",
         limit_time = 0,
     
         world_id = 0,
@@ -27,8 +26,7 @@ function Login:Create()
     self.is_login = false
     self.http = Http.New()
     self.url = Servers.login[1].url
-
-
+    
 end
 
 -- 后面通过向服务器发包检测是否已经登录
@@ -52,9 +50,8 @@ function Login:LoginWithAccountPassword(account, password)
 
     local r = self.http:PostJson(self.url .. "/login", d)
     if(r.code == 0) then
-        self.cache.guid = r.guid
+        self.cache.account_id = r.account_id
         print("登录成功\n")
-
         self:GetWorldList()
     else
         print("登录失败\n")
