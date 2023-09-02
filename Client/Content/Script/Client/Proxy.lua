@@ -15,7 +15,7 @@ end
 function Proxy:OnReqConnectProxy(guid, key)
     print("请求授权代理服务器", key)
     local req = {
-        guid = Guid.New(guid):ToIdent(),
+        guid = guid,
         key = key,
     }
     self.net:SendPB(ProxyRPC.REQ_CONNECT_PROXY, "rpc.ReqConnectProxy", req )

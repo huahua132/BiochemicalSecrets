@@ -56,7 +56,6 @@ NetClient = Object({})
 function NetClient:Create(type)
     self.delegations = {}
     self.netEventHandlers = {}
-    self.guid = Guid.New()
     self.isLogined = false
     self.heartBeatIndex = 0
     self.isConnected = false
@@ -77,23 +76,10 @@ end
 
 -- 包裹最基本的包体
 function NetClient:SendData(msgId, data)
-    local ident = {
-        svrid = self.guid.nHead64,
-        index = self.guid.nData64
-    }
-    --print("servi: ", ident.svrid, "  index: ", ident.index)
-    
-    local msgBase = {
-        player_id = ident,
-        msg_data = data,
-        player_Client_list = nil,
-        hash_ident = nil,
-    }
-    local bytes = assert(pb.encode("rpc.MsgBase", msgBase))
     local header = NetHeader.New()
     header.id = msgId
-    header.size = #bytes + 6 -- 包的总大小: 包头 和 包体
-    local sendBytes = header:Encode() .. bytes
+    header.size = #data + 6 -- 包的总大小: 包头 和 包体
+    local sendBytes = header:Encode() .. data
     --Screen.Print("SendData: MsgID" .. tostring(msgId) .. "  " .. pb.tohex(sendBytes) )
     print("发送数据: " .. pb.tohex(sendBytes))
     self.client:SendData(sendBytes)
@@ -240,8 +226,7 @@ function NetClient:UnpackMsg(data)
     
     if size == #data then
         self.isReceivedAll = true
-        local bytes = assert(pb.decode("rpc.MsgBase", string.sub(data, 7, -1)))
-        self:OnMessageEvent(id, bytes.msg_data)
+        self:OnMessageEvent(id, string.sub(data, 7, -1))
         return 0
     end
     

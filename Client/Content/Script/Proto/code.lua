@@ -3,15 +3,10 @@
 ----------------------------------------------------------------------------------
 
 proto_code = [[
-// 基础定义
-
+// 描述: 基础定义
+// 使用: 服务器, 客户端
 syntax = "proto3";
 package rpc;
-
-message Ident {
-    int64 svrid = 1;
-    int64 index = 2;
-}
 
 message Vector2 {
     float x = 1;
@@ -29,16 +24,23 @@ message Vector4 {
     float y = 2;
     float z = 3;
     float w = 4;
-}
+}// 描述: 数据库 
+// 使用: 服务器
 
-///////////////////////////////////////////////////////////////////
-// only be used between proxy-server and game-server
-message MsgBase {
-    Ident player_id = 1;
-    bytes msg_data = 2;
-    repeated Ident player_client_list = 3;
-    Ident hash_ident = 4;
-}// 数据库 RPC
+// 30000 ~ 35000
+enum DbProxyRPC {
+    DB_RPC_NONE = 0;
+
+    REQ_PLAYER_LIST = 30000;
+    ACK_PLAYER_LIST = 30001;
+    REQ_PLAYER_CREATE = 30002;
+    REQ_PLAYER_DELETE = 30003;
+
+    REQ_PLAYER_DATA_LOAD = 30004; // 加载玩家数据
+    ACK_PLAYER_DATA_LOAD = 30005; //
+    REQ_PLAYER_DATA_SAVE = 30006; // 请求保存玩家数据
+    ACK_PLAYER_DATA_SAVE = 30007; //
+}
 
 message PropertyInt {
     bytes property_name = 1;
@@ -60,7 +62,7 @@ message PropertyString {
 
 message PropertyObject {
     bytes property_name = 1;
-    Ident data = 2;
+    bytes data = 2;
     int64 reason = 3;
 }
 
@@ -99,7 +101,7 @@ message RecordString {
 message RecordObject {
     int32 row = 1;
     int32 col = 2;
-    Ident data = 3;
+    bytes data = 3;
 }
 
 message RecordVector2 {
@@ -131,73 +133,73 @@ message ObjectRecordBase {
 /////////////////////////////////////////////////
 
 message ObjectPropertyInt {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyInt property_list = 2;
 }
 
 message ObjectPropertyFloat {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyFloat property_list = 2;
 }
 
 message ObjectPropertyString {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyString property_list = 2;
 }
 
 message ObjectPropertyObject {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyObject property_list = 2;
 }
 
 message ObjectPropertyVector2 {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyVector2 property_list = 2;
 }
 
 message ObjectPropertyVector3 {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyVector3 property_list = 2;
 }
 
 message ObjectRecordInt {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordInt property_list = 3;
 }
 
 message ObjectRecordFloat {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordFloat property_list = 3;
 }
 
 message ObjectRecordString {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordString property_list = 3;
 }
 
 message ObjectRecordObject {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordObject property_list = 3;
 }
 
 message ObjectRecordVector2 {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordVector2 property_list = 3;
 }
 
 message ObjectRecordVector3 {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordVector3 property_list = 3;
 }
 
 message ObjectRecordSwap {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes origin_record_name = 2;
     bytes target_record_name = 3;
     int32 row_origin = 4;
@@ -205,21 +207,19 @@ message ObjectRecordSwap {
 }
 
 message ObjectRecordAddRow {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated RecordAddRowStruct row_data = 3;
 }
 
 message ObjectRecordRemove {
-    Ident player_id = 1;
+    bytes player_id = 1;
     bytes record_name = 2;
     repeated int32 remove_row = 3;
 }
 
-///////////////////////////////////////////////////////////////////
-// send all properties as a pack when client log in or log off
 message ObjectPropertyList {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated PropertyInt property_int_list = 2;
     repeated PropertyFloat property_float_list = 3;
     repeated PropertyString property_string_list = 4;
@@ -231,27 +231,11 @@ message ObjectPropertyList {
 message MultiObjectPropertyList { repeated ObjectPropertyList multi_player_property = 1; }
 
 message ObjectRecordList {
-    Ident player_id = 1;
+    bytes player_id = 1;
     repeated ObjectRecordBase record_list = 2;
 }
 
 message MultiObjectRecordList { repeated ObjectRecordList multi_player_record = 1; }
-
-
-// 30000 ~ 35000
-enum DbProxyRPC {
-    DB_RPC_NONE = 0;
-
-    REQ_PLAYER_LIST = 30000;
-    ACK_PLAYER_LIST = 30001;
-    REQ_PLAYER_CREATE = 30002;
-    REQ_PLAYER_DELETE = 30003;
-
-    REQ_PLAYER_DATA_LOAD = 30004; // 加载玩家数据
-    ACK_PLAYER_DATA_LOAD = 30005; //
-    REQ_PLAYER_DATA_SAVE = 30006; // 请求保存玩家数据
-    ACK_PLAYER_DATA_SAVE = 30007; //
-}
 
 enum DbType {
     DB_TYPE_NONE = 0;
@@ -261,8 +245,8 @@ enum DbType {
 }
 
 message DbPlayerData {
-    Ident object = 1;
-    Ident guid = 2;
+    bytes object = 1;
+    bytes guid = 2;
     bytes account = 3;
     ObjectPropertyList property = 4;
     ObjectRecordList record = 5;
@@ -298,8 +282,56 @@ message AckDbQuery {
     bytes db = 3;
     map<int32, bytes> result = 4;
 }
-// 房间、匹配、副本
+// 描述: 房间、匹配、副本
+// 使用: 服务器, 客户端
 
+// 20000 ~ 22000
+enum GameBaseRPC {
+    GAME_BASE_RPC_NONE = 0;
+
+    REQ_GAME_START = 20015; // 预留测试用
+    ACK_GAME_START = 20016; //
+    REQ_GAME_JOIN = 20017;  // 请求加入游戏,在游戏中断线重连时也请求它
+    ACK_GAME_JOIN = 20018;
+    ACK_GAME_OVER = 20019;    // 游戏结束
+    REQ_GAME_RESTART = 20020; // 重新开始游戏
+    ACK_GAME_RESTART = 20021;
+
+    // 场景对象
+    ACK_PLAYER_ENTER = 20100; // 对象在服务端上创建成功
+    ACK_PLAYER_LEAVE = 20102; //
+}
+
+// 进入游戏
+message ReqGameJoin {}
+
+message AckGameJoin { int32 code = 1; }
+
+message AckGameStart { int32 code = 1; }
+
+// 重新开局
+message ReqGameRestart {}
+
+message AckGameRestart { int32 code = 1; }
+
+message PlayerBaseInfo {
+    bytes guid = 1;
+    int32 index = 2;
+    bytes account = 3;
+    bytes name = 4;
+    int32 mask = 5;
+    int32 glove = 6;
+}
+
+message AckPlayerEnterList // 同场景同房间 玩家进入时列表
+{
+    repeated PlayerBaseInfo list = 1;
+}
+
+message AckPlayerLeaveList // 同场景同房间 离开时列表
+{
+    repeated bytes list = 1;
+}
 
 // 18000 ~ 20000 : game.proto
 enum GameRPC {
@@ -347,7 +379,7 @@ message ReqRoomJoin { int32 room_id = 1; }
 
 message AckRoomJoin {
     int32 code = 1;
-    Ident player = 2;
+    bytes player = 2;
 }
 
 // 请求退出房间
@@ -355,7 +387,7 @@ message ReqRoomQuit { int32 room_id = 1; }
 
 message AckRoomQuit {
     int32 code = 1;
-    Ident player = 2;
+    bytes player = 2;
 }
 
 enum RoomStatus {
@@ -379,7 +411,7 @@ enum RoomPlayerStatus {
 }
 
 message RoomPlayer {
-    Ident guid = 1;
+    bytes guid = 1;
     bytes name = 2;
     RoomPlayerStatus status = 3;
 }
@@ -398,7 +430,7 @@ message ReqRoomDetails { int32 room_id = 1; }
 message RoomDetails {
     int32 id = 1;                    // 房间id
     bytes name = 2;                  // 房间名称
-    Ident owner = 3;                 // 房主
+    bytes owner = 3;                 // 房主
     RoomStatus status = 4;           // 房间状态
     int32 nplayers = 5;              // 当前房间内玩家人数
     int32 max_players = 6;           // 最多人数
@@ -432,55 +464,8 @@ message AckRoomGamePlayStart {
 message ReqRoomCreateRobot { int32 amount = 1; }
 
 message AckRoomCreateRobot { int32 code = 1; }
-// 游戏玩法基本RPC
-
-// 20000 ~ 22000
-enum GameBaseRPC {
-    GAME_BASE_RPC_NONE = 0;
-
-    REQ_GAME_START = 20015; // 预留测试用
-    ACK_GAME_START = 20016; //
-    REQ_GAME_JOIN = 20017;  // 请求加入游戏,在游戏中断线重连时也请求它
-    ACK_GAME_JOIN = 20018;
-    ACK_GAME_OVER = 20019;    // 游戏结束
-    REQ_GAME_RESTART = 20020; // 重新开始游戏
-    ACK_GAME_RESTART = 20021;
-
-    // 场景对象
-    ACK_PLAYER_ENTER = 20100; // 对象在服务端上创建成功
-    ACK_PLAYER_LEAVE = 20102; //
-}
-
-// 进入游戏
-message ReqGameJoin {}
-
-message AckGameJoin { int32 code = 1; }
-
-message AckGameStart { int32 code = 1; }
-
-// 重新开局
-message ReqGameRestart {}
-
-message AckGameRestart { int32 code = 1; }
-
-message PlayerBaseInfo {
-    Ident guid = 1;
-    int32 index = 2;
-    bytes account = 3;
-    bytes name = 4;
-    int32 mask = 5;
-    int32 glove = 6;
-}
-
-message AckPlayerEnterList // 同场景同房间 玩家进入时列表
-{
-    repeated PlayerBaseInfo list = 1;
-}
-
-message AckPlayerLeaveList // 同场景同房间 离开时列表
-{
-    repeated Ident list = 1;
-}
+// 描述: 游戏管理器 
+// 使用: 服务器
 // GameplayManagerRPC RPC 500 ~ 600
 enum GameplayManagerRPC {
     GAMEPLAY_MANAGER_RPC_NONE = 0;
@@ -528,7 +513,7 @@ message ReqGameplayCreate {
     bytes key = 2;
     int32 game_id = 3;
     RoomDetails room = 4;
-    repeated PlayerData players = 5;
+    //repeated PlayerData players = 5;
 }
 
 // 不用 GamePlay Manager 不用响应也行
@@ -554,124 +539,8 @@ message ReqGameplayPrepared {
     bytes name = 7; // Game Play 服务器名称
 }
 
-message AckGameplayPrepared { int32 code = 1; }// 大厅RPC
-
-// GameLobbyRPC RPC 10000 ~ 12000
-enum LobbyBaseRPC {
-    // 进入游戏前的RPC  ////////////////////////////
-    LOBBY_BASE_RPC_NONE = 0;
-
-    REQ_BASIC_PLAYER_DATA = 10000; // 进入服务器之前获取基本游戏信息
-    ACK_BASIC_PLAYER_DATA = 10001;
-
-    REQ_NEW_PLAYER = 10002; // 创建新玩家
-    ACK_NEW_PLAYER = 10003;
-
-    REQ_ENTER = 10100; // 进入游戏大厅
-    ACK_ENTER = 10101; //
-
-    REQ_RECONNECT = 10102;
-    ACK_RECONNECT = 10103;
-
-    // 进入游戏后的 RPC ////////////////////////////
-    REQ_LEAVE = 10110; // 退出
-    ACK_LEAVE = 10111; //
-}
-
-message ReqEnter {
-    Ident object = 1;  // 游戏对象guid
-    Ident guid = 2;    // 账号guid
-    bytes account = 3; // 登录账号
-}
-
-message AckEnter {
-    int32 code = 1;
-    Ident guid = 2;
-    Ident object = 3; // 相当于是一个Player
-}
-
-message ReqLeave {}
-message AckLeave {}
-
-message ReqReconnect {}
-message AckReconnect {}
-
-// proxy或客户端告知game服务器的
-message AckPlayerOffline {
-    Ident self = 1;
-    Ident object = 2;
-    int32 game = 3;
-    int32 proxy = 4;
-}// 玩家RPC
-
-// LobbyPlayerRPC 12000 ~ 15000
-enum LobbyPlayerRPC {
-    LOBBY_PLAYER_RPC_NONE = 0;
-
-    REQ_PLAYER_DATA = 12000; // 获取玩家详细全部数据
-    ACK_PLAYER_DATA = 12001;
-
-    REQ_PLAYER_PUBLIC_DATA = 12002; // 获取玩家公有数据, 查看其他玩家的数据或游戏开局使用
-    ACK_PLAYER_PUBLIC_DATA = 12003;
-
-    REQ_PLAYER_EQUIPMENT = 12004; // 玩家的装备信息
-    ACK_PLAYER_EQUIPMENT = 12005;
-}
-
-message BasicPlayerData {
-    Ident object = 1;
-    bytes name = 2;
-}
-
-message ReqBasicPlayerData {}
-
-message AckBasicPlayerData { repeated BasicPlayerData list = 1; }
-
-message ReqNewPlayer { bytes name = 1; }
-
-message AckNewPlayer {
-    int32 code = 1;
-    Ident object = 2;
-}
-
-message ReqPlayerData {}
-
-message PlayerData {
-    int32 room = 2;
-    int32 gameplay = 3;
-
-    int32 mask = 4;
-    repeated int32 masks = 5;
-    int32 glove = 6;
-    repeated int32 gloves = 7;
-}
-
-
-message AckPlayerData {
-    int32 code = 1;
-    PlayerData data = 2;
-}
-
-// REQ_PLAYER_PUBLIC_DATA
-message ReqPlayerPublicData { Ident guid = 1; }
-
-message AckPlayerPublicData {
-    int32 code = 1;
-    Ident guid = 2;
-    repeated int32 masks = 3;
-    repeated int32 gloves = 4;
-}
-
-message ReqPlayerEquipment { Ident guid = 1; }
-
-
-message AckPlayerEquipment {
-    int32 code = 1;
-    Ident guid = 2;
-    int32 mask = 3;
-    int32 glove = 4;
-}
-
+message AckGameplayPrepared { int32 code = 1; }// 描述: 登录验证
+// 使用: 服务器, 客户端
 
 // 6000 ~ 7000
 // RPC用于服务器之间的通信，不与客户端通信
@@ -693,7 +562,8 @@ message AckConnectProxyVerify {
     int32 code = 2;
     int32 world_id = 3;
     bytes account = 4;
-}// 微服务器RPC，包含了聊天、语音等
+}// 描述: 微服务器RPC，包含了聊天、语音等
+// 使用: 服务器, 客户端
 
 // GameLobbyRPC RPC 15000 ~ 16000
 enum MicroRPC {
@@ -701,7 +571,56 @@ enum MicroRPC {
     REQ_CHAT = 1;
     ACK_CHAT = 2;
 }
-// 代理服务器RPC
+// 描述: 玩家RPC
+// 使用: 服务器,客户端
+
+// PlayerRPC 12000 ~ 15000
+enum PlayerRPC {
+    PLAYER_RPC_NONE = 0;
+    ACK_PLAYER_ONLINE = 12000;
+    ACK_PLAYER_OFFLINE = 12001;
+    REQ_PLAYER_DATA = 12002; // 获取玩家详细全部数据
+    ACK_PLAYER_DATA = 12003; //
+}// 描述: 玩家事件
+// 使用: 服务器
+
+
+// PlayerEventPC 10000 ~ 12000
+enum PlayerEventRPC {
+    LOBBY_BASE_RPC_NONE = 0;
+    PLAYER_ENTER_EVENT = 10000; // 进入
+    PLAYER_BIND_EVENT = 10001;  //
+    PLAYER_LEAVE_EVENT = 10002; // 退出
+    PLAYER_RECONNECT_EVENT = 10003;
+}
+
+message PlayerEnterEvent {
+    bytes object = 1;  // 游戏对象guid
+    bytes guid = 2;    // 账号guid
+    bytes account = 3; // 登录账号
+    int32 proxy_id = 4;// proxy_id
+}
+
+message PlayerBindEvent {
+    int32 code = 1;
+    bytes guid = 2;
+    bytes object = 3; // 相当于是一个Player
+}
+
+message PlayerLeaveEvent {
+    bytes object = 1;
+}
+
+message PlayerReconnectEvent {}
+
+// proxy或客户端告知lobby服务器的
+message AckPlayerOffline {
+    bytes self = 1;
+    bytes object = 2;
+    int32 game = 3;
+    int32 proxy = 4;
+}// 描述: 代理服务器RPC
+// 使用: 服务器,客户端
 
 // 8000 ~ 10000
 enum ProxyRPC {
@@ -720,7 +639,7 @@ enum ProxyRPC {
 ////////////////////////////////////////////////////
 
 message ReqConnectProxy {
-    Ident guid = 1; // account的guid
+    bytes guid = 1; // account的guid
     bytes key = 2;
 }
 
@@ -733,7 +652,15 @@ message ReqHeartBeat { int32 index = 1; }
 
 message AckHeartBeat { int32 index = 1; }
 
-message AckKickOff { int64 time = 1; }// 各服务器之间的通信RPC
+message AckKickOff { int64 time = 1; }// 描述: 各服务器之间的通信RPC
+// 使用: 服务器,客户端
+
+// only be used in inner server
+message MsgBase {
+    bytes guid = 1;
+    bytes msg_data = 2;
+    repeated bytes broadcast = 3;
+}
 
 // Servers RPC 0 ~ 500
 enum ServerRPC {
@@ -747,10 +674,6 @@ enum ServerRPC {
 
     REQ_REPORT = 5; // 服务端报告服务状态
     ACK_REPORT = 6;
-
-    PLAYER_ENETER = 10;
-    PLAYER_LEAVE = 11;
-    PLAYER_OFFLINE = 12;
 
     CLOSE_SOCKET = 100; // want to close some one
     SERVER_ADD = 101;
@@ -812,45 +735,9 @@ message ReqUnregisterServer {}
 
 message AckUnregisterServer { int32 code = 1; }
 
-// 玩家在线
-message PlayerEneter {
-    Ident guid = 1;
-    bytes name = 2;
-    bytes account = 3;
-    int32 world_id = 4;
-    int32 game_id = 5;
-    int32 micro_id = 6;
-    int32 lobby_id = 7;
-    int32 gameplay_manager_id = 8;
-}
-
-// 玩家离线
-message PlayerLeave { Ident guid = 1; }
-
 message ServerList { repeated Server list = 1; }
 
-message ServerHeartBeat { int32 count = 1; }
-
-
-// Game command
-message ReqServerCommand {
-    enum EGameCommandType {
-        EGCT_MODIY_PROPERTY = 0; //[property_name,value]
-        EGCT_MODIY_ITEM = 1;     //[item_id,count]
-        EGCT_CREATE_OBJECT = 2;  //[object_index,count]
-        EGCT_ADD_ROLE_EXP = 3;   //
-    }
-    Ident control_id = 1;
-    EGameCommandType command_id = 2;
-    bytes command_str_value = 3;
-    int64 command_value_int = 4;
-    double command_value_float = 5;
-    bytes command_value_str = 6;
-    Ident command_value_object = 7;
-    int32 row = 8;
-    int32 col = 9;
-}
-// 各服务器之间的通信RPC
+message ServerHeartBeat { int32 count = 1; }// 各服务器之间的通信RPC
 
 // Servers RPC 50000 ~ 50200
 enum TestRPC {
