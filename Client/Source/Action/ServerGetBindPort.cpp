@@ -2,6 +2,7 @@
 
 
 #include "ServerGetBindPort.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
 
 // Get Server binded network port
 const FString UServerGetBindPort::GetServerBindPort(UObject* WorldContextObject) {
@@ -15,4 +16,10 @@ const FString UServerGetBindPort::GetServerBindPort(UObject* WorldContextObject)
         UE_LOG(LogTemp, Warning, TEXT("WorldContextObject is null"));
     }
     return TEXT("false");
+}
+
+
+FString UServerGetBindPort::GetMechineID()
+{
+	return FPlatformMisc::GetMachineId().ToString();
 }

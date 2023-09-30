@@ -17,7 +17,7 @@ end
 function M:OnClicked_ButtonLogin()
 	-- 账号采用时间戳来区别
 	self.Switcher:SetActiveWidgetIndex(1)
-	GameInstance.Login:LoginWithAccountPassword("test_player_" .. tostring(os.time()), tostring(os.time()) )
+	GameInstance.Login:LoginWithAccountPassword("test_player_" .. string.sub(GameInstance.DeviceID, 0 , 8), tostring(os.time()) )
 end
 
 return M

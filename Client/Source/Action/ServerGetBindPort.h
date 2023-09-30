@@ -15,4 +15,7 @@ class ACTION_API UServerGetBindPort : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "Net")
 	static const FString GetServerBindPort(UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Util")
+	static FString GetMechineID();
 };
