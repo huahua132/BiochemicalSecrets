@@ -30,259 +30,246 @@ message Vector4 {
 // 30000 ~ 35000
 enum DbProxyRPC {
     DB_RPC_NONE = 0;
+    
+    REQ_REDIS_QUERY = 30001;
+    ACK_REDIS_QUERY = 30002;
+    REQ_REDIS_GET = 30003;
+    ACK_REDIS_GET = 30004;
+    REQ_REDIS_SET = 30005;
+    ACK_REDIS_SET = 30006;
+    REQ_REDIS_HGET = 30007;
+    ACK_REDIS_HGET = 30008;
+    REQ_REDIS_HSET = 30009;
+    ACK_REDIS_HSET = 30010;
+    REQ_REDIS_HGETALL = 30011;
+    ACK_REDIS_HGETALL = 30012;
+    REQ_REDIS_HMSET = 30013;
+    ACK_REDIS_HMSET = 30014;
 
-    REQ_PLAYER_LIST = 30000;
-    ACK_PLAYER_LIST = 30001;
-    REQ_PLAYER_CREATE = 30002;
-    REQ_PLAYER_DELETE = 30003;
+    REQ_MONGO_QUERY = 30500;
+    ACK_MONGO_QUERY = 30501;
+    REQ_MONGO_INSERT = 30502;
+    ACK_MONGO_INSERT = 30503;
+    REQ_MONGO_FIND = 30504;
+    ACK_MONGO_FIND = 30505;
+    REQ_MONGO_UPDATE = 30506;
+    ACK_MONGO_UPDATE = 30507;
+    REQ_MONGO_DELETE = 30508;
+    ACK_MONGO_DELETE = 30509;
+    REQ_MONGO_CREATE_INDEX = 30510;
+    ACK_MONGO_CREATE_INDEX = 30511;
 
-    REQ_PLAYER_DATA_LOAD = 30004; // 加载玩家数据
-    ACK_PLAYER_DATA_LOAD = 30005; //
-    REQ_PLAYER_DATA_SAVE = 30006; // 请求保存玩家数据
-    ACK_PLAYER_DATA_SAVE = 30007; //
+    REQ_MYSQL_QUERY = 31000;
+    ACK_MYSQL_QUERY = 31001;
+    REQ_MYSQL_EXECUTE = 31002;
+    ACK_MYSQL_EXECUTE = 31003;
+    REQ_MYSQL_SELECT = 31004;
+    ACK_MYSQL_SELECT = 31005;
+    REQ_MYSQL_INSERT = 31006;
+    ACK_MYSQL_INSERT = 31007;
+    REQ_MYSQL_UPDATE = 31008;
+    ACK_MYSQL_UPDATE = 31009;
+    REQ_MYSQL_DELETE = 31010;
+    ACK_MYSQL_DELETE = 31011;
+    
+
+    REQ_CLICKHOUSE_QUERY = 31500;
+    ACK_CLICKHOUSE_QUERY = 31501;
+    REQ_CLICKHOUSE_EXECUTE = 31502;
+    ACK_CLICKHOUSE_EXECUTE = 31503;
+    REQ_CLICKHOUSE_SELECT = 31504;
+    ACK_CLICKHOUSE_SELECT = 31505;
+    REQ_CLICKHOUSE_INSERT = 31506;
+    ACK_CLICKHOUSE_INSERT = 31507;
+
 }
 
-message PropertyInt {
-    bytes property_name = 1;
-    int64 data = 2;
-    int64 reason = 3;
+// Proxy DB code
+enum DbProxyCode {
+    DB_PROXY_CODE_REDIS_SUCCESS = 0;
+    DB_PROXY_CODE_REDIS_PROTO_ERROR = 1;
+    DB_PROXY_CODE_REDIS_EXCEPTION = 2;
+    DB_PROXY_CODE_REDIS_NO_KEY = 3;
+
+    DB_PROXY_CODE_MONGO_SUCCESS = 500;
+    DB_PROXY_CODE_MONGO_PROTO_ERROR = 501;
+    DB_PROXY_CODE_MONGO_EXCEPTION = 502;
+
+    DB_PROXY_CODE_MYSQL_SUCCESS = 1000;
+    DB_PROXY_CODE_MYSQL_PROTO_ERROR = 1001;
+    DB_PROXY_CODE_MYSQL_EXCEPTION = 1002;
+
+    DB_PROXY_CODE_CLICKHOUSE_SUCCESS = 1500;
+    DB_PROXY_CODE_CLICKHOUSE_PROTO_ERROR = 1501;
+    DB_PROXY_CODE_CLICKHOUSE_EXCEPTION = 1502;
 }
 
-message PropertyFloat {
-    bytes property_name = 1;
-    float data = 2;
-    int64 reason = 3;
+message Data {
+    int32 type = 1;
+    bytes value = 2;
 }
 
-message PropertyString {
-    bytes property_name = 1;
-    bytes data = 2;
-    int64 reason = 3;
+message List {
+    int32 type = 1;
+    repeated bytes values = 2;
 }
 
-message PropertyObject {
-    bytes property_name = 1;
-    bytes data = 2;
-    int64 reason = 3;
-}
-
-message PropertyVector2 {
-    bytes property_name = 1;
-    Vector2 data = 2;
-    int64 reason = 3;
-}
-
-message PropertyVector3 {
-    bytes property_name = 1;
-    Vector3 data = 2;
-    int64 reason = 3;
-}
-
-///////////////////////////////////////////////
-
-message RecordInt {
-    int32 row = 1;
-    int32 col = 2;
-    int64 data = 3;
-}
-
-message RecordFloat {
-    int32 row = 1;
-    int32 col = 2;
-    float data = 3;
-}
-
-message RecordString {
-    int32 row = 1;
-    int32 col = 2;
-    bytes data = 3;
-}
-
-message RecordObject {
-    int32 row = 1;
-    int32 col = 2;
-    bytes data = 3;
-}
-
-message RecordVector2 {
-    int32 row = 1;
-    int32 col = 2;
-    Vector2 data = 3;
-}
-
-message RecordVector3 {
-    int32 row = 1;
-    int32 col = 2;
-    Vector3 data = 3;
-}
-
-message RecordAddRowStruct {
-    int32 row = 1;
-    repeated RecordInt record_int_list = 2;
-    repeated RecordFloat record_float_list = 3;
-    repeated RecordString record_string_list = 4;
-    repeated RecordObject record_object_list = 5;
-    repeated RecordVector2 record_vector2_list = 6;
-    repeated RecordVector3 record_vector3_list = 7;
-}
-message ObjectRecordBase {
-    bytes record_name = 1;
-    repeated RecordAddRowStruct row_struct = 2;
-}
-
-/////////////////////////////////////////////////
-
-message ObjectPropertyInt {
-    bytes player_id = 1;
-    repeated PropertyInt property_list = 2;
-}
-
-message ObjectPropertyFloat {
-    bytes player_id = 1;
-    repeated PropertyFloat property_list = 2;
-}
-
-message ObjectPropertyString {
-    bytes player_id = 1;
-    repeated PropertyString property_list = 2;
-}
-
-message ObjectPropertyObject {
-    bytes player_id = 1;
-    repeated PropertyObject property_list = 2;
-}
-
-message ObjectPropertyVector2 {
-    bytes player_id = 1;
-    repeated PropertyVector2 property_list = 2;
-}
-
-message ObjectPropertyVector3 {
-    bytes player_id = 1;
-    repeated PropertyVector3 property_list = 2;
-}
-
-message ObjectRecordInt {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordInt property_list = 3;
-}
-
-message ObjectRecordFloat {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordFloat property_list = 3;
-}
-
-message ObjectRecordString {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordString property_list = 3;
-}
-
-message ObjectRecordObject {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordObject property_list = 3;
-}
-
-message ObjectRecordVector2 {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordVector2 property_list = 3;
-}
-
-message ObjectRecordVector3 {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordVector3 property_list = 3;
-}
-
-message ObjectRecordSwap {
-    bytes player_id = 1;
-    bytes origin_record_name = 2;
-    bytes target_record_name = 3;
-    int32 row_origin = 4;
-    int32 row_target = 5;
-}
-
-message ObjectRecordAddRow {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated RecordAddRowStruct row_data = 3;
-}
-
-message ObjectRecordRemove {
-    bytes player_id = 1;
-    bytes record_name = 2;
-    repeated int32 remove_row = 3;
-}
-
-message ObjectPropertyList {
-    bytes player_id = 1;
-    repeated PropertyInt property_int_list = 2;
-    repeated PropertyFloat property_float_list = 3;
-    repeated PropertyString property_string_list = 4;
-    repeated PropertyObject property_object_list = 5;
-    repeated PropertyVector2 property_vector2_list = 6;
-    repeated PropertyVector3 property_vector3_list = 7;
-}
-
-message MultiObjectPropertyList { repeated ObjectPropertyList multi_player_property = 1; }
-
-message ObjectRecordList {
-    bytes player_id = 1;
-    repeated ObjectRecordBase record_list = 2;
-}
-
-message MultiObjectRecordList { repeated ObjectRecordList multi_player_record = 1; }
-
-enum DbType {
-    DB_TYPE_NONE = 0;
-    MYSQL = 1;
-    MONGO = 2;
-    REDIS = 3;
-}
-
-message DbPlayerData {
-    bytes object = 1;
-    bytes guid = 2;
-    bytes account = 3;
-    ObjectPropertyList property = 4;
-    ObjectRecordList record = 5;
-}
-
-enum DbCMD {
-    DB_CMD_NONE = 0;
-    DB_QUERY = 1;
-    DB_INSERT = 2;
-    DB_UPDATE = 3;
-    DB_DELETE = 4;
-}
-
-message ReqDbQuery {
+message ReqRedisGet {
     int32 query_id = 1;
-    DbCMD cmd = 2;
-    bytes db = 3;
-    bytes args = 4;
+    string key = 2;
 }
 
-
-message Col {
+message AckRedisGet {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    bytes value = 4;
 }
 
-message Row {
-    repeated Col d = 1;
-}
-
-
-message AckDbQuery {
+message ReqRedisSet {
     int32 query_id = 1;
-    DbCMD cmd = 2;
-    bytes db = 3;
-    map<int32, bytes> result = 4;
+    string key = 2;
+    bytes value = 3;
+    int64 ttl = 4;
 }
-// 描述: 房间、匹配、副本
+
+message AckRedisSet {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+}
+
+message ReqRedisHGet {
+    int32 query_id = 1;
+    string key = 2;
+    string field = 3;
+}
+
+message AckRedisHGet {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    bytes value = 4;
+}
+
+message ReqRedisHSet {
+    int32 query_id = 1;
+    string key = 2;
+    string field = 3;
+    bytes value = 4;
+    int64 ttl = 5;
+}
+
+message AckRedisHSet {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+}
+
+message ReqClickhouseExecute {
+    int32 query_id = 1;
+    string sql = 2;
+}
+
+message AckClickhouseExecute {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+}
+
+message ReqClickhouseSelect {
+    int32 query_id = 1;
+    string sql = 2;
+}
+
+message AckClickhouseSelect {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    repeated List result = 4;
+}
+
+// Insert one
+message ReqMongoInsert {
+    int32 query_id = 1;
+    string db = 2;
+    string collection = 3;
+    string insert_json = 4;
+}
+
+message AckMongoInsert {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    string inserted_id = 4; // Inserted Object ID
+}
+
+// Find many
+message ReqMongoFind {
+    int32 query_id = 1;
+    string db = 2;
+    string collection = 3;
+    string condition_json = 4;
+    int32 limit = 5;
+    int32 skip = 6;
+    string sort_json = 7;
+}
+
+message AckMongoFind {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    int32 matched_count = 4;
+    repeated string result_json = 5;
+}
+
+// Default: Update many
+message ReqMongoUpdate {
+    int32 query_id = 1;
+    string db = 2;
+    string collection = 3;
+    string condition_json = 4;
+    string update_json = 5;
+}
+
+message AckMongoUpdate {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    int32 matched_count = 4;
+    int32 modified_count = 5;
+    int32 upserted_count = 6;
+}
+
+// Default: Delete many
+message ReqMongoDelete {
+    int32 query_id = 1;
+    string db = 2;
+    string collection = 3;
+    string condition_json = 4;
+}
+
+message AckMongoDelete {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    int32 deleted_count = 4;
+}
+
+// Create index
+message ReqMongoCreateIndex {
+    int32 query_id = 1;
+    string db = 2;
+    string collection = 3;
+    string condition_json = 4;
+}
+
+message AckMongoCreateIndex {
+    int32 code = 1;
+    bytes msg = 2;
+    int32 query_id = 3;
+    string result_json = 4;
+}// 描述: 房间、匹配、副本
 // 使用: 服务器, 客户端
 
 // 20000 ~ 22000
@@ -587,10 +574,17 @@ message ReqPlayerData {
 }
 
 message AckPlayerData {
-    bytes account = 1;
-    bytes player_id = 2;
-    bytes name = 3;
-    int32 level = 4;
+    string account = 1;
+    string account_id = 2;
+    string player_id = 3;
+    string name = 4;
+    int32 level = 5;
+    string ip = 6;
+    int32 area = 7;
+    int32 created_time = 8;
+    int32 last_login_time = 9;
+    int32 last_offline_time = 10;
+    string platform = 11;
 }// 描述: 玩家事件
 // 使用: 服务器
 
@@ -608,6 +602,7 @@ message PlayerEnterEvent {
     bytes account_id = 1;   // 账号guid
     bytes account = 2;      // 登录账号
     int32 proxy_id = 3;     // proxy_id
+    bytes ip = 4;           // 登录IP
 }
 
 message PlayerBindEvent {
@@ -616,19 +611,20 @@ message PlayerBindEvent {
     bytes player_id = 3;
 }
 
+enum PlayerLeaveReason {
+    PLAYER_LEAVE_REASON_NONE = 0;    // Unknown
+    PLAYER_LEAVE_REASON_QUIT = 1;    // Quit normal
+    PLAYER_LEAVE_REQSON_TIMEOUT = 2; // Heartbeat timeout
+}
+
 message PlayerLeaveEvent {
-    bytes object = 1;
+    bytes player_id = 1;
+    int32 proxy_id = 2;
+    int32 reason = 3; // Offline reason
 }
 
 message PlayerReconnectEvent {}
-
-// proxy或客户端告知lobby服务器的
-message AckPlayerOffline {
-    bytes self = 1;
-    bytes object = 2;
-    int32 game = 3;
-    int32 proxy = 4;
-}// 描述: 代理服务器RPC
+// 描述: 代理服务器RPC
 // 使用: 服务器,客户端
 
 // 8000 ~ 10000

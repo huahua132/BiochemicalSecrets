@@ -29,4 +29,16 @@ function Player:OnAckPlayerData(data)
     local ack = assert(pb.decode("rpc.AckPlayerData", data))
     PrintTable(ack)
     GameInstance:LoadLevel("/Game/Maps/Lobby")
+    local msg = 'Login success\n Account: ' .. ack.account
+    .. "\nAccountID: " .. ack.account_id
+    .. "\nPlayerID: " .. ack.player_id
+    .. "\nName: " .. ack.name
+    .. "\nLevel: " .. ack.level
+    .. "\nIP: " .. ack.ip
+    .. "\nArea: " .. ack.area
+    .. "\nCreatedTime: " .. ack.created_time
+    .. "\nLastLoginTime: " .. ack.last_login_time
+    .. "\nLastOfflineTime: " .. ack.last_offline_time
+    .. "\nPlatform: " .. ack.platform
+    Screen.Print(msg)
 end
